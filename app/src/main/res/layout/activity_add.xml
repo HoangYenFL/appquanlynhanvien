@@ -10,7 +10,7 @@
     <Button
         android:id="@+id/btnChonhinh"
         style="@android:style/Widget.DeviceDefault.Light.Button"
-        android:layout_width="143dp"
+        android:layout_width="142dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/btnChuphinh"
         android:layout_alignParentEnd="true"
@@ -60,14 +60,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/imgHinhDaiDien"
-        android:layout_marginTop="36dp" />
+        android:layout_marginTop="36dp"
+        android:hint="Họ và tên"
+        android:textColorHint="#63256E"
+        android:textSize="18sp" />
 
     <EditText
         android:id="@+id/edtsdt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/edtten"
-        android:layout_marginTop="5dp" />
+        android:layout_marginTop="5dp"
+        android:hint="Số điện thoại"
+        android:textColorHint="#63256E" />
 
     <Button
         android:id="@+id/btnLuu"
