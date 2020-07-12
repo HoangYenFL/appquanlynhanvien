@@ -1,8 +1,12 @@
 package com.android.appquanlynhanvien;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
@@ -14,6 +18,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import static java.nio.file.Files.delete;
 
 public class AdapterNhanVien extends BaseAdapter {
     Activity context;
@@ -65,8 +71,47 @@ public class AdapterNhanVien extends BaseAdapter {
                     context.startActivity(intent);
                 }
             });
+            btnxoa.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setIcon(android.R.drawable.ic_delete);
+                    builder.setTitle("Xác nhận xóa");
+                    builder.setMessage("Bạn có chắc chắn muốn xóa nhân viên này không?");
+                    builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            delete(nhanVien.ID);
+                        }
+                    });
+                    builder.setNegativeButton("Không", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                }
+            });
 
         return convertView;
 
+    }
+
+    private void delete(int idNhanVien) {
+        SQLiteDatabase database = Database.initDatabase(context, "appnhanvien.db");
+        database.delete("NhanVien", "ID = ?", new String[] {idNhanVien + ""});
+        list.clear();
+        Cursor cursor =database.rawQuery("SELECT * FROM NhanVien", null);
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(0);
+            String ten = cursor.getString(1);
+            String sdt = cursor.getString(2);
+            byte[] anh = cursor.getBlob(3);
+
+            list.add(new NhanVien(id, ten, sdt, anh));
+        }
+        notifyDataSetChanged();
     }
 }

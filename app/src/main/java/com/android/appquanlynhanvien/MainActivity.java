@@ -2,10 +2,13 @@ package com.android.appquanlynhanvien;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -17,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
         ListView listView;
         ArrayList<NhanVien> list;
         AdapterNhanVien adapter;
+        Button btnAdd;
   protected void onCreate (Bundle savedInstanceState){
       super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -29,6 +33,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private  void addControls() {
+        btnAdd = (Button) findViewById(R.id.btnAdd);
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,AddActivity.class);
+                startActivity(intent);
+
+            }
+        });
         listView = (ListView) findViewById(R.id.listView);
         list = new ArrayList<>();
         adapter = new AdapterNhanVien(this,list);

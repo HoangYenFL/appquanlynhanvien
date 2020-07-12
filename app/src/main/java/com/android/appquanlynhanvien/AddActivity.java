@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,46 +17,24 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-public class UpdateActivity extends AppCompatActivity {
+public class AddActivity extends AppCompatActivity {
     final String DATABASE_NAME= "appnhanvien.db";
     final int RESQUEST_TAKE_PHOTO = 123;
     final int RESQUEST_CHOOSE_PHOTO = 321;
     Button btnChonhinh, btnChuphinh, btnLuu, btnHuy;
     EditText edtten, edtsdt;
     ImageView imgHinhDaiDien, imgnen;
-    int id = -1;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_update);
+        setContentView(R.layout.activity_add);
         addControls();
         addEvents();
-        initUI();
     }
-
-    private void initUI() {
-        Intent intent = getIntent();
-        id = intent.getIntExtra("ID", -1);
-        SQLiteDatabase database = Database.initDatabase(this, DATABASE_NAME);
-        Cursor cursor = database.rawQuery("SELECT * FROM NhanVien where ID = ?", new String[] { id + "",});
-        cursor.moveToFirst();
-        String ten = cursor.getString(1);
-        String sdt = cursor.getString(2);
-        byte [] anh = cursor.getBlob(3);
-
-        Bitmap bitmap = BitmapFactory.decodeByteArray(anh, 0, anh.length);
-        imgHinhDaiDien.setImageBitmap(bitmap);
-        edtten.setText(ten);
-        edtsdt.setText(sdt);
-    }
-
     private void addControls() {
         btnChonhinh = (Button) findViewById(R.id.btnChonhinh);
         btnChuphinh = (Button) findViewById(R.id.btnChuphinh);
@@ -94,7 +71,7 @@ public class UpdateActivity extends AppCompatActivity {
         btnLuu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                update();
+                insert();
             }
         });
     }
@@ -130,7 +107,7 @@ public class UpdateActivity extends AppCompatActivity {
         }
     }
 
-    private void update() {
+    private void insert() {
         String ten = edtten.getText().toString();
         String sdt = edtsdt.getText().toString();
         byte[] anh = getByteArrayFromImageView(imgHinhDaiDien);
@@ -141,7 +118,7 @@ public class UpdateActivity extends AppCompatActivity {
         contentValues.put("Anh", anh);
 
         SQLiteDatabase database = Database.initDatabase(this, "appnhanvien.db");
-        database.update("NhanVien", contentValues, "id = ?", new String[] {id + ""});
+        database.insert("NhanVien", null, contentValues);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
